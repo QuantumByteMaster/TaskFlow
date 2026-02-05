@@ -41,8 +41,14 @@ app.use('/api/events', eventRoutes);
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
+// Root route for health check
+app.get('/', (req, res) => {
+    res.send('TaskFlow API is running!');
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });

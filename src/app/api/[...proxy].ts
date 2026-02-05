@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const TARGET = "https://task-flow-backend.onrender.com";
+const TARGET = process.env.NEXT_PUBLIC_BACKEND_URL || "https://task-flow-backend.onrender.com";
 
 async function handler(req: NextRequest) {
   const url = new URL(req.url);
