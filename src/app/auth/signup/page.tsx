@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react"
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignUp() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const { signup } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +40,24 @@ export default function SignUp() {
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="password">Password</Label>
-                                <Input id="password" type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                                <div className="relative">
+                                    <Input 
+                                        id="password" 
+                                        type={showPassword ? "text" : "password"} 
+                                        placeholder="Enter your password" 
+                                        value={password} 
+                                        onChange={(e) => setPassword(e.target.value)} 
+                                        required
+                                        className="pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    >
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
                             </div>
                             <Button type="submit" className="w-full mt-4">Sign Up</Button>
                         </div>
@@ -49,7 +68,6 @@ export default function SignUp() {
                             Log in
                         </Link>
                     </p>
-                    <p className="text-center mt-4">Don&apos;t have an account? <Link href="/auth/signup" className="text-blue-500 hover:underline">Sign up</Link></p>
                 </CardContent>
             </Card>
         </div>

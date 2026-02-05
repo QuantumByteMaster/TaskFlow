@@ -8,12 +8,14 @@ import axios from 'axios';
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: { name: string; email: string } | null;
+  user: { name: string; email: string; profilePic?: string } | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   checkAuthStatus: () => Promise<void>;
   showToast: (message: string, type: 'success' | 'error') => void;
+  setUser: (user: { name: string; email: string; profilePic?: string } | null) => void;
+  setAuthToken: (token: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,7 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; profilePic?: string } | null>(null);
   const router = useRouter();
 
   const setAuthToken = useCallback((token: string | null) => {
@@ -38,14 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const response = await axios.get('/api/users/me', {
+        const response = await axios.get('http://localhost:5000/api/users/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(response.data);
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Auth check error:', error);
-        logout();
+        // Don't auto-logout on simple check failure, might be network, but if 401 maybe?
+        // Let's rely on protected routes to catch specific 401s.
       }
     }
     setIsLoading(false);
@@ -57,10 +60,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('/api/users/login', { email, password });
+      const res = await axios.post('http://localhost:5000/api/users/login', { email, password });
       if (res.status === 200 && res.data.token) {
         setAuthToken(res.data.token);
-        setUser(res.data.user);
+        setUser(res.data); // data includes user fields and token, but user field is flattened in some responses or not? 
+        // userController login returns: { _id, name, email, token }
+        // So setUser(res.data) works if the type matches.
+        // Wait, userController returns { _id, name, email, token } directly.
+        // My interface says user: { name, email, profilePic }.
+        // So I should set user to res.data
         setIsAuthenticated(true);
         showToast('Login successful!', 'success');
         router.push('/workspace');
@@ -73,13 +81,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (name: string, email: string, password: string) => {
     try {
-      const response = await axios.post('/api/users/register', { name, email, password });
+      const response = await axios.post('http://localhost:5000/api/users/register', { name, email, password });
       const { token } = response.data;
-      localStorage.setItem('token', token);
+      setAuthToken(token);
       setUser(response.data);
       setIsAuthenticated(true);
       showToast('Signup successful', 'success');
-      router.push('/auth/login');
+      router.push('/workspace'); // Go to workspace instead of login
     } catch (error) {
       console.error('Signup error:', error);
       showToast('Signup failed', 'error');
@@ -99,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, signup, logout, checkAuthStatus, showToast }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, signup, logout, checkAuthStatus, showToast, setUser, setAuthToken }}>
       {children}
     </AuthContext.Provider>
   );
