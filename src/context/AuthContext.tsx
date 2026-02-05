@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/me', {
+        const response = await axios.get('/api/users/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(response.data);
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', { email, password });
+      const res = await axios.post('/api/users/login', { email, password });
       if (res.status === 200 && res.data.token) {
         setAuthToken(res.data.token);
         setUser(res.data); // data includes user fields and token, but user field is flattened in some responses or not? 
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (name: string, email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', { name, email, password });
+      const response = await axios.post('/api/users/register', { name, email, password });
       const { token } = response.data;
       setAuthToken(token);
       setUser(response.data);

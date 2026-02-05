@@ -90,7 +90,7 @@ export default function CalendarPage() {
       const endOfMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0)
       
       const response = await fetch(
-        `http://localhost:5000/api/events?startDate=${startOfMonth.toISOString()}&endDate=${endOfMonth.toISOString()}`,
+        `/api/events?startDate=${startOfMonth.toISOString()}&endDate=${endOfMonth.toISOString()}`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
       
@@ -180,8 +180,8 @@ export default function CalendarPage() {
 
     try {
       const url = editingEvent 
-        ? `http://localhost:5000/api/events/${editingEvent._id}`
-        : 'http://localhost:5000/api/events'
+        ? `/api/events/${editingEvent._id}`
+        : '/api/events'
       
       const response = await fetch(url, {
         method: editingEvent ? 'PUT' : 'POST',
@@ -205,7 +205,7 @@ export default function CalendarPage() {
     const token = localStorage.getItem('token')
     
     try {
-      const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+      const response = await fetch(`/api/events/${eventId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })

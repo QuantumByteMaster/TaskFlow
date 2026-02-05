@@ -65,7 +65,7 @@ export default function LinksPage() {
   const fetchLinks = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:5000/api/links', {
+      const response = await axios.get('/api/links', {
         headers: { Authorization: `Bearer ${token}` }
       })
       setLinks(response.data)
@@ -81,7 +81,7 @@ export default function LinksPage() {
     setIsEnriching(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post('http://localhost:5000/api/ai/enrich-link', 
+      const response = await axios.post('/api/ai/enrich-link', 
         { url: formData.url },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -139,13 +139,13 @@ export default function LinksPage() {
       
       if (editingLink) {
         // Update existing
-        await axios.put(`http://localhost:5000/api/links/${editingLink._id}`, 
+        await axios.put(`/api/links/${editingLink._id}`, 
           formData, 
           { headers: { Authorization: `Bearer ${token}` } }
         )
       } else {
         // Create new
-        await axios.post('http://localhost:5000/api/links', 
+        await axios.post('/api/links', 
           formData, 
           { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -163,7 +163,7 @@ export default function LinksPage() {
   const handleTogglePin = async (linkId: string) => {
     try {
       const token = localStorage.getItem('token')
-      await axios.patch(`http://localhost:5000/api/links/${linkId}/pin`, {}, {
+      await axios.patch(`/api/links/${linkId}/pin`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       })
       fetchLinks()
@@ -175,7 +175,7 @@ export default function LinksPage() {
   const handleDeleteLink = async (linkId: string) => {
     try {
       const token = localStorage.getItem('token')
-      await axios.delete(`http://localhost:5000/api/links/${linkId}`, {
+      await axios.delete(`/api/links/${linkId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       fetchLinks()

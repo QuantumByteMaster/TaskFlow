@@ -24,7 +24,7 @@ export default function QuickTasksWidget() {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:5000/api/tasks', {
+      const response = await axios.get('/api/tasks', {
         headers: { Authorization: `Bearer ${token}` }
       })
       
@@ -48,7 +48,7 @@ export default function QuickTasksWidget() {
     try {
       const token = localStorage.getItem('token')
       const newStatus = currentStatus === 'Completed' ? 'To Do' : 'Completed'
-      await axios.put(`http://localhost:5000/api/tasks/${taskId}`, 
+      await axios.put(`/api/tasks/${taskId}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       )

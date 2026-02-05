@@ -51,7 +51,9 @@ export default function ProfilePage() {
         ...(password ? { password } : {}) 
       };
 
-      const { data } = await axios.put('http://localhost:5000/api/users/profile', updateData, config);
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
+      const { data } = await axios.put('/api/users/profile', updateData, config);
       
       // Update local context
       setAuthToken(data.token);
@@ -76,7 +78,7 @@ export default function ProfilePage() {
      try {
          setIsLoading(true); // temporary loading state for upload
          const token = localStorage.getItem('token');
-         const res = await axios.post('http://localhost:5000/api/upload', formDataUpload, {
+         const res = await axios.post('/api/upload', formDataUpload, {
              headers: {
                  'Content-Type': 'multipart/form-data',
                  Authorization: `Bearer ${token}`
@@ -84,7 +86,7 @@ export default function ProfilePage() {
          });
          
          // Prepend server URL if it's a relative path
-         const fullPath = `http://localhost:5000${res.data.filePath}`;
+         const fullPath = `${BACKEND_URL}${res.data.filePath}`;
          setFormData(prev => ({ ...prev, profilePic: fullPath }));
          setIsLoading(false);
      } catch (err) {

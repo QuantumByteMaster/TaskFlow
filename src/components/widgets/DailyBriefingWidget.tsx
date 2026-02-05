@@ -49,13 +49,13 @@ export default function DailyBriefingWidget() {
       const token = localStorage.getItem('token')
       
       // First fetch all tasks
-      const tasksRes = await axios.get('http://localhost:5000/api/tasks', {
+      const tasksRes = await axios.get('/api/tasks', {
         headers: { Authorization: `Bearer ${token}` }
       })
       
       // Then get AI briefing
       const briefingRes = await axios.post(
-        'http://localhost:5000/api/ai/briefing',
+        '/api/ai/briefing',
         { tasks: tasksRes.data },
         { headers: { Authorization: `Bearer ${token}` } }
       )
