@@ -21,7 +21,13 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    process.env.CLIENT_URL || "" // Fallback to empty string if not defined to avoid crash, though usually cors handles undefined well or strict matching
+  ],
+  credentials: true
+}));
 
 // Connect to MongoDB
 connectDB();
