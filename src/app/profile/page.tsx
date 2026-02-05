@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar';
 import { User, Mail, Lock, Camera, Save, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
 export default function ProfilePage() {
   const { user, setUser, setAuthToken } = useAuth(); // Using setUser/setAuthToken directly
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +53,7 @@ export default function ProfilePage() {
         ...(password ? { password } : {}) 
       };
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
 
       const { data } = await axios.put('/api/users/profile', updateData, config);
       

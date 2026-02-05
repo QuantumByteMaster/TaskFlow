@@ -1,24 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  rewrites: async () => {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "http://localhost:5000/api/:path*",
-      },
-    ];
+  // 1. Ignore strict errors so deployment always succeeds
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
     ignoreBuildErrors: true,
   },
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true,
+
+  // 2. THE BRIDGE: Forward all /api requests to your Render Backend
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://taskflow-9cqd.onrender.com/api/:path*', // <--- Your Render URL
+      },
+    ];
   },
 };
 
