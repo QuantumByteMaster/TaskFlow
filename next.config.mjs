@@ -13,8 +13,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://taskflow-9cqd.onrender.com/api/:path*', // <--- Your Render URL
-      },
+        destination: 'http://20.244.11.68/taskflow/api/:path*',      },
     ];
   },
 };
