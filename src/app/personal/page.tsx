@@ -127,6 +127,8 @@ function MiniCalendar() {
 export default function PersonalDashboardPage() {
   const router = useRouter()
   
+  const [isLoaded, setIsLoaded] = useState(false)
+
   // Focus state
   const [focusItems, setFocusItems] = useState<FocusItem[]>([])
   const [addingFocus, setAddingFocus] = useState(false)
@@ -182,15 +184,18 @@ export default function PersonalDashboardPage() {
 
     const savedPlanner = localStorage.getItem(PLANNER_KEY)
     if (savedPlanner) { try { setWeeklyGoalsData(JSON.parse(savedPlanner)) } catch { /* keep default */ } }
+
+    setIsLoaded(true)
   }, [])
 
   // Save data
   useEffect(() => {
+    if (!isLoaded) return
     const data: FocusData = { items: focusItems, quoteIndex, lastUpdated: getLocalDateKey(new Date()) }
     localStorage.setItem(FOCUS_KEY, JSON.stringify(data))
-  }, [focusItems, quoteIndex])
-  useEffect(() => { localStorage.setItem(GOALS_KEY, JSON.stringify(goals)) }, [goals])
-  useEffect(() => { if (Object.keys(weeklyGoalsData).length > 0) localStorage.setItem(PLANNER_KEY, JSON.stringify(weeklyGoalsData)) }, [weeklyGoalsData])
+  }, [focusItems, quoteIndex, isLoaded])
+  useEffect(() => { if (!isLoaded) return; localStorage.setItem(GOALS_KEY, JSON.stringify(goals)) }, [goals, isLoaded])
+  useEffect(() => { if (!isLoaded) return; if (Object.keys(weeklyGoalsData).length > 0) localStorage.setItem(PLANNER_KEY, JSON.stringify(weeklyGoalsData)) }, [weeklyGoalsData, isLoaded])
 
   // Focus handlers
   const addFocus = () => {
