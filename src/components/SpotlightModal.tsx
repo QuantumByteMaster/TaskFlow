@@ -52,6 +52,20 @@ export default function SpotlightModal() {
       action: () => { router.push('/workspace'); close(); }
     },
     {
+      id: 'calendar',
+      label: 'Go to Calendar',
+      icon: 'navigate',
+      keywords: ['calendar', 'events', 'schedule', 'planner'],
+      action: () => { router.push('/calendar'); close(); }
+    },
+    {
+      id: 'personal',
+      label: 'Go to Personal Dashboard',
+      icon: 'navigate',
+      keywords: ['personal', 'goals', 'focus', 'dashboard'],
+      action: () => { router.push('/personal'); close(); }
+    },
+    {
       id: 'profile',
       label: 'Go to Profile',
       icon: 'navigate',
