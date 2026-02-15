@@ -404,20 +404,20 @@ export default function CalendarPage() {
                     type="date"
                     value={eventDate}
                     onChange={(e) => setEventDate(e.target.value)}
-                    className="flex-1 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border-0 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 ring-indigo-500/20"
+                    className="flex-1 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border-0 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 ring-indigo-500/20 dark:[color-scheme:dark]"
                   />
                   <input
                     type="time"
                     value={eventTime}
                     onChange={(e) => setEventTime(e.target.value)}
                     disabled={allDay}
-                    className="w-28 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border-0 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 ring-indigo-500/20 disabled:opacity-40"
+                    className="w-28 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border-0 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 ring-indigo-500/20 disabled:opacity-40 dark:[color-scheme:dark]"
                   />
                 </div>
               </div>
 
               {/* All Day Toggle */}
-              <label className="flex items-center gap-3 py-2 cursor-pointer group">
+              <label onClick={() => setAllDay(!allDay)} className="flex items-center gap-3 py-2 cursor-pointer group">
                 <div className={`w-10 h-6 rounded-full transition-all relative ${
                   allDay ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-white/10'
                 }`}>
